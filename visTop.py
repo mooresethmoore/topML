@@ -95,7 +95,5 @@ def view_SC(alpha):
     #fig.update_layout(title_text=f'Simplicial Complex Representation of the P0 distribution (epsilon={alpha.value})')
     iplot(fig)
 
-control= widgets.interact(view_SC, alpha = alpha)
 
-from IPython.display import display
-display(control)
+fig.add_mesh3d
