@@ -94,6 +94,6 @@ def view_SC(alpha):
         fig.data[0].k = []
     #fig.update_layout(title_text=f'Simplicial Complex Representation of the P0 distribution (epsilon={alpha.value})')
     iplot(fig)
-
+    fig.write_json()
 
 fig.add_mesh3d
