@@ -79,7 +79,7 @@ def persistGeoVoxel(cub,eps=0,maxD=2,inf=False,outThresh=lambda x: x):
 
 
 
-def mofGrab(cubFile):#,maxD=2,inf=False,compression_opts=8):  # ,outThresh=lambda x: x): no outThresh for now for conv
+def mofGrab(cubFile):#,maxD=3,inf=False,compression_opts=8):  # ,outThresh=lambda x: x): no outThresh for now for conv
     maxD=3
     inf=False
     compression_opts=8
