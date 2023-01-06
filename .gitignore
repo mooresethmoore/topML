@@ -2,4 +2,5 @@
 nonOptFrames.pkl
 .idea/.name
 .DS_Store
-micelles
+micelles/Micelles_identification
+micelles/topDat_eps05
