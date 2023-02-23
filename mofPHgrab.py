@@ -16,9 +16,11 @@ import multiprocessing
 from multiprocessing.dummy import Pool
 from joblib import Parallel, delayed
 
-atHome=True
 
-if atHome:
+
+atHome=True
+### change this section to argparse
+if atHome: 
     df = pd.read_csv(r"Z:\data\diverse_metals\post-combustion-vsa-2-clean.csv")
     espDir = r"Z:\data\diverse_metals\ESPs"
     outDir= r"Z:\data\diverse_metals\diverseTop"

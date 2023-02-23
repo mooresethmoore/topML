@@ -1,5 +1,6 @@
 import os
 import sys
+import typing
 import pickle
 import json
 import numpy as np
@@ -11,7 +12,7 @@ import gudhi,gudhi.hera,gudhi.wasserstein,persim
 
 
 class PDhash():
-    def __init__(self, res=1, diags=None, maxHdim=2, persistThresh=0, mode='freq'):
+    def __init__(self, res=1, maxHdim=2, persistThresh=0, diags=None,  mode='freq'):
         """upper bound resolution.
         In the case of sparce PD spaces, it may be useful to project a hash map of your dataset to the diagram space"""
         self.res = res
@@ -22,9 +23,16 @@ class PDhash():
             maxHdim + 1)}  # While this does impose extra time compared to np, it is ideal for map-reduce type parallelization
         self.mode = mode  # instead of freq, there is the 'set' (or None) option, that maps img[b][pt] to a set of indices rather than frequencies (dict:intensity)
 
-    def addDiagRpp(self, diag, index):  ## note the index can be just an index number, or a numerical value
+    def addDiagRpp(self, diag, index):
+        """diag is {0:[(b,d),...],1:
+            or [[(b,d),(b,d)...] for b in range(maxB)]
+            index is key associated with this persistence diagram
+
+            """
         ###although the numerical values (duplicate index) won't stack in the set
-        """diag is {0:[(b,d),...],1: """
+
+        ##note the index can be just an index number, or a numerical value -- most importantly, below statement must be true for expected behavior, but we leave it out fornow
+        # assert isinstance(index,typing.Hashable)
         if self.mode == "freq":
             for i in range(np.min([self.maxD + 1, len(diag)])):
                 for k in diag[i]:
@@ -218,6 +226,7 @@ class PDhash():
         return {b: {pt: (np.mean(np.array(list(self.img[b][pt]), dtype=np.float32)),
                          np.var(np.array(list(self.img[b][pt]), dtype=np.float32))) for pt in self.img[b].keys()} for b
                 in self.img.keys()}
+
 
 
 def boxStatsIndex(pdStack):
