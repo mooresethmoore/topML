@@ -42,7 +42,7 @@ class PDhash():
             for i in range(np.min([self.maxD + 1, len(diag)])):
                 for k in diag[i]:
                     if k[1] - k[0] > self.thresh:
-                        pt = (round(round(k[0] / self.res) * self.res,ptsigFig),round( round(k[1] / self.res) * self.res),ptsigFig)
+                        pt = (round(round(k[0] / self.res) * self.res,ptsigFig),round( round(k[1] / self.res) * self.res,ptsigFig))
                         if pt[0] < self.bounds[i][0]:
                             self.bounds[i][0] = pt[0]
                         if pt[1] > self.bounds[i][1]:
@@ -59,7 +59,7 @@ class PDhash():
             for i in range(np.min([self.maxD + 1, len(diag)])):
                 for k in diag[i]:
                     if k[1] - k[0] > self.thresh:
-                        pt = (round(k[0] / self.res) * self.res, round(k[1] / self.res) * self.res)
+                        pt = (round(round(k[0] / self.res) * self.res,ptsigFig),round( round(k[1] / self.res) * self.res,ptsigFig))
                         if pt[0] < self.bounds[i][0]:
                             self.bounds[i][0] = pt[0]
                         if pt[1] > self.bounds[i][1]:
@@ -71,7 +71,7 @@ class PDhash():
                             self.img[i][pt] = {index}
 
     def addDiagCubeRips(self, crispy, index):
-        """diag is [[bi,b,d,bx,by,bz,dx,dy,dz],..] """
+        """diag is [[bi,b,d,bx,by,bz,dx,dy,dz],..] """  ### i did this at some point, look for
         pass
 
     def __getitem__(self, item):
@@ -271,17 +271,21 @@ class PDhash():
                 pyo.plot(fig, filename=f"{savePref}{saveSuf}.html", auto_open=False)
                 fig.write_image(f"{savePref}{saveSuf}.png")
 
-        if savePref:
-            saveSuf=f"bALL_Mean"
-            fig = sp.make_subplots(rows=1, cols=self.maxD+1)  # go.Figure(data=[trace], layout=layout)
+        if savePref or showFig:
+            fig = sp.make_subplots(rows=1, cols=self.maxD + 1)  # go.Figure(data=[trace], layout=layout)
             for b in range(len(traces)):
-                fig.add_trace(traces[b],row=1,col=b+1)
-            layout=dict(title=f"{titSuf}", height=ht, width=wt,
-                      xaxis=dict(range=[bounds[b][0], bounds[b][1]], ),
-                      yaxis=dict(range=[bounds[b][0], bounds[b][1]], ))
-            fig.update_layout(layout)
-            pyo.plot(fig, filename=f"{savePref}{saveSuf}.html", auto_open=False)
-            fig.write_image(f"{savePref}{saveSuf}.png")
+                fig.add_trace(traces[b], row=1, col=b + 1)
+            totalBounds = [np.min([self.bounds[b][0] for b in range(self.maxD + 1)]),
+                           np.max([self.bounds[b][1] for b in range(self.maxD + 1)])]
+
+            fig.update_layout(dict(title=f"B{b} {titSuf}", height=ht, width=wt,
+                                   xaxis=dict(range=totalBounds, ),
+                                   yaxis=dict(range=totalBounds, )))
+            if savePref:
+                saveSuf = f"bALL_Mean"
+
+                pyo.plot(fig, filename=f"{savePref}{saveSuf}.html", auto_open=False)
+                fig.write_image(f"{savePref}{saveSuf}.png")
             if showFig:
                 fig.show()
 
@@ -311,32 +315,37 @@ class PDhash():
         for b in range(self.maxD+1):
             X = bettiProj(self, b)# assuming bettiProj is one of the mean/density/sum functions in this class but can be any betti numpy projection
             #X[X == 0] = np.nan
-            x = np.linspace(bounds[b][0], bounds[b][1], len(X))
+            x = np.linspace(self.bounds[b][0], self.bounds[b][1], len(X))
             y = x
             trace = go.Heatmap(x=x, y=y, z=X[::-1], colorscale=colormp, autocolorscale=False, zmax=boxBoundMax, zmin=0)
+
             traces.append(trace)
             if savePref:
-                saveSuf=f"b{b}_Mean"
+                saveSuf=f"b{b}"
                 layout = go.Layout(title=f"B{b} {titSuf}", height=ht, width=wt,
                                    xaxis=dict(range=[bounds[b][0], bounds[b][1]], ),
                                    yaxis=dict(range=[bounds[b][0], bounds[b][1]], ))
                 fig=go.Figure(trace,layout=layout)
                 pyo.plot(fig, filename=f"{savePref}{saveSuf}.html", auto_open=False)
                 fig.write_image(f"{savePref}{saveSuf}.png")
-
-        if savePref:
-            saveSuf=f"bALL_Mean"
-            fig = sp.make_subplots(rows=1, cols=self.maxD+1)  # go.Figure(data=[trace], layout=layout)
+        if savePref or showFig:
+            fig = sp.make_subplots(rows=1, cols=self.maxD + 1)  # go.Figure(data=[trace], layout=layout)
             for b in range(len(traces)):
-                fig.add_trace(traces[b],row=1,col=b+1)
-            layout=dict(title=f"{titSuf}", height=ht, width=wt,
-                      xaxis=dict(range=[bounds[b][0], bounds[b][1]], ),
-                      yaxis=dict(range=[bounds[b][0], bounds[b][1]], ))
-            fig.update_layout(layout)
-            pyo.plot(fig, filename=f"{savePref}{saveSuf}.html", auto_open=False)
-            fig.write_image(f"{savePref}{saveSuf}.png")
+                fig.add_trace(traces[b], row=1, col=b + 1)
+            totalBounds= [np.min([self.bounds[b][0] for b in range(self.maxD+1)]),np.max([self.bounds[b][1] for b in range(self.maxD+1)])]
+
+
+            fig.update_layout(dict(title=f"B{b} {titSuf}", height=ht, width=wt,
+                                   xaxis=dict(range=totalBounds, ),
+                                   yaxis=dict(range=totalBounds, )))
+            if savePref:
+                saveSuf = f"bALL"
+
+                pyo.plot(fig, filename=f"{savePref}{saveSuf}.html", auto_open=False)
+                fig.write_image(f"{savePref}{saveSuf}.png")
             if showFig:
                 fig.show()
+
 
 
         if returnTraces:
@@ -347,6 +356,12 @@ class PDhash():
         return {b: {pt: (np.mean(np.array(list(self.img[b][pt]), dtype=np.float32)),
                          np.var(np.array(list(self.img[b][pt]), dtype=np.float32))) for pt in self.img[b].keys()} for b
                 in self.img.keys()}
+
+def alphaToNppdgm(dgm,dRange=3):
+    nppdgm=[[] for i in range(dRange)]
+    for i in dgm:
+        nppdgm[i[0]].append([i[1][0],i[1][1]])
+    return [np.array(i) for i in nppdgm]
 
 
 
