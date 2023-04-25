@@ -1,8 +1,11 @@
 
 nonOptFrames.pkl
-.idea/.name
 .DS_Store
 micelles/Micelles_identification
 micelles/topDat_eps05
 seth_MOFgitlab_jan23/diverseTopCSV.zip
 seth_MOFgitlab_jan23.zip
+.ipynb_checkpoints
+linker_node_stuff
+.idea/*
+__pycache__
