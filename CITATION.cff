@@ -1,0 +1,16 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: TopML
+message: >-
+  Topological Data Analysis Machine Learning Framework -
+  designed for molecular data
+type: software
+authors:
+  - given-names: Seth Moore
+    email: mooreseth@uchicago.edu
+    name-particle: Seth
+    family-names: Moore
+    orcid: 'https://orcid.org/0000-0002-1327-2887'
+license: MIT
